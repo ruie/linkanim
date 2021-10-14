@@ -1,24 +1,19 @@
 import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 import dynamics from "dynamics.js";
 import tinycolor from "tinycolor2";
+import uniqueId from "lodash.uniqueid";
 
-export default function Link({ children }) {
+export default function GlitchLink({ children, href, className }) {
 	const [hoverRef] = useHover();
+	const [id] = useState(() => uniqueId("glitch-"));
 
 	return (
-		<a ref={hoverRef} style={{ position: "relative", color: "#7A7C80" }}>
-			<svg
-				id="clip-paths"
-				width={0}
-				height={0}
-				version="1.1"
-				xmlns="http://www.w3.org/2000/svg"
-				xmlnsXlink="http://www.w3.org/1999/xlink"
-			>
-				<g />
-			</svg>
-			<span id="test">{children}</span>
-		</a>
+		<Link href={href} passHref scroll>
+			<a ref={hoverRef} className={className}>
+				<span id={id}>{children}</span>
+			</a>
+		</Link>
 	);
 }
 
@@ -36,7 +31,8 @@ function createSvgEl(template) {
 }
 
 function createSvgChildEl(template) {
-	return createSvgEl(template).firstChild;
+	let el = createSvgEl(template).firstChild;
+	return el;
 }
 
 function createMasksWithStripes(count, box, averageHeight = 10) {
@@ -60,9 +56,9 @@ function createMasksWithStripes(count, box, averageHeight = 10) {
 			Math.round(Math.random() * box.width)
 		);
 		masks[maskIdx].push(
-			`M ${x},${y} L ${x + w},${y} L ${x + w},${y + stripeHeight} L ${x},${
+			`M ${x},${y} L ${x + w},${y} L ${x + w},${
 				y + stripeHeight
-			} Z`
+			} L ${x},${y + stripeHeight} Z`
 		);
 
 		maskIdx += 1;
@@ -128,10 +124,12 @@ function cloneAndStripeElement(element, clipPathName, parent) {
 	return el;
 }
 
-function animateLink(el) {
+function animateLink(ref) {
+	const el = ref.current;
+	const currentElId = ref.current.childNodes[0].id;
 	let animating = true;
 	let box = el.getBoundingClientRect();
-	let currentEl = document.querySelector("#test");
+	let currentEl = document.querySelector(`#${currentElId}`);
 
 	let animate = function () {
 		let masks = createMasksWithStripes(3, box, 3);
@@ -139,11 +137,13 @@ function animateLink(el) {
 
 		for (let i = 0; i < masks.length; i++) {
 			let clonedEl = cloneAndStripeElement(currentEl, masks[i], el);
-			console.log(`${i} ${clonedEl}`);
+
 			let childrenEls = Array.prototype.slice.apply(
 				clonedEl.querySelectorAll("path")
 			);
+
 			childrenEls.push(clonedEl);
+
 			for (let k = 0; k < childrenEls.length; k++) {
 				let color = tinycolor(
 					`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`
@@ -154,6 +154,7 @@ function animateLink(el) {
 					fill: rgb,
 				});
 			}
+
 			clonedEl.style.display = "";
 			clonedEls.push(clonedEl);
 		}
@@ -189,7 +190,7 @@ function animateLink(el) {
 				let maskEl = document.querySelector(`#${masks[i]}`);
 				maskEl.parentNode.removeChild(maskEl);
 			}
-		}, Math.random() * 1000);
+		}, Math.random() * 800);
 	};
 
 	animate();
@@ -206,17 +207,20 @@ function useHover() {
 	const ref = useRef(null);
 	let r = null;
 
-	const handleMouseOver = (e) => {
-		r = animateLink(e.target);
-	};
-
-	const handleMouseOut = (e) => {
-		r.stop();
-	};
-
 	useEffect(
 		() => {
 			const node = ref.current;
+
+			const handleMouseOver = (e) => {
+				console.log(r);
+				r = animateLink(ref);
+				console.log(r);
+			};
+
+			const handleMouseOut = (e) => {
+				console.log(r);
+				r.stop();
+			};
 			if (node) {
 				node.addEventListener("mouseover", handleMouseOver);
 				node.addEventListener("mouseout", handleMouseOut);
@@ -226,7 +230,7 @@ function useHover() {
 				};
 			}
 		},
-		[ref.current] // Recall only if ref changes
+		[] // Recall only if ref changes
 	);
 	return [ref];
 }
