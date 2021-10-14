@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import dynamics from "dynamics.js";
 import tinycolor from "tinycolor2";
@@ -56,9 +56,9 @@ function createMasksWithStripes(count, box, averageHeight = 10, id) {
 			Math.round(Math.random() * box.width)
 		);
 		masks[maskIdx].push(
-			`M ${x},${y} L ${x + w},${y} L ${x + w},${
+			`M ${x},${y} L ${x + w},${y} L ${x + w},${y + stripeHeight} L ${x},${
 				y + stripeHeight
-			} L ${x},${y + stripeHeight} Z`
+			} Z`
 		);
 
 		maskIdx += 1;
@@ -124,91 +124,91 @@ function cloneAndStripeElement(element, clipPathName, parent) {
 	return el;
 }
 
-function animateLink(ref) {
-	const el = ref.current;
-	const currentElId = ref.current.childNodes[0].id;
-	let animating = true;
-	let box = el.getBoundingClientRect();
-	let currentEl = document.querySelector(`#${currentElId}`);
-
-	let animate = function () {
-		let masks = createMasksWithStripes(3, box, 3, currentElId);
-		let clonedEls = [];
-
-		for (let i = 0; i < masks.length; i++) {
-			let clonedEl = cloneAndStripeElement(currentEl, masks[i], el);
-
-			let childrenEls = Array.prototype.slice.apply(
-				clonedEl.querySelectorAll("path")
-			);
-
-			childrenEls.push(clonedEl);
-
-			for (let k = 0; k < childrenEls.length; k++) {
-				let color = tinycolor(
-					`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`
-				);
-				let rgb = color.toRgbString();
-				dynamics.css(childrenEls[k], {
-					color: rgb,
-					fill: rgb,
-				});
-			}
-
-			clonedEl.style.display = "";
-			clonedEls.push(clonedEl);
-		}
-
-		for (let i = 0; i < clonedEls.length; i++) {
-			let clonedEl = clonedEls[i];
-			dynamics.css(clonedEl, {
-				translateX: Math.random() * 10 - 5,
-			});
-
-			dynamics.setTimeout(function () {
-				dynamics.css(clonedEl, {
-					translateX: 0,
-				});
-			}, 50);
-
-			dynamics.setTimeout(function () {
-				dynamics.css(clonedEl, {
-					translateX: Math.random() * 5 - 2.5,
-				});
-			}, 100);
-
-			dynamics.setTimeout(function () {
-				el.removeChild(clonedEl);
-			}, 150);
-		}
-
-		dynamics.setTimeout(function () {
-			if (animating) {
-				animate();
-			}
-			for (let i = 0; i < masks.length; i++) {
-				let maskEl = document.querySelector(`#${masks[i]}`);
-				maskEl.parentNode.removeChild(maskEl);
-			}
-		}, Math.random() * 800);
-	};
-
-	animate();
-
-	return {
-		stop: function () {
-			animating = false;
-		},
-	};
-}
-
 function useHover() {
 	const ref = useRef(null);
-	let r = null;
+
+	const animateLink = useCallback((ref) => {
+		const el = ref.current;
+		const currentElId = ref.current.childNodes[0].id;
+		let animating = true;
+		let box = el.getBoundingClientRect();
+		let currentEl = document.querySelector(`#${currentElId}`);
+
+		let animate = function () {
+			let masks = createMasksWithStripes(3, box, 3, currentElId);
+			let clonedEls = [];
+
+			for (let i = 0; i < masks.length; i++) {
+				let clonedEl = cloneAndStripeElement(currentEl, masks[i], el);
+
+				let childrenEls = Array.prototype.slice.apply(
+					clonedEl.querySelectorAll("path")
+				);
+
+				childrenEls.push(clonedEl);
+
+				for (let k = 0; k < childrenEls.length; k++) {
+					let color = tinycolor(
+						`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`
+					);
+					let rgb = color.toRgbString();
+					dynamics.css(childrenEls[k], {
+						color: rgb,
+						fill: rgb,
+					});
+				}
+
+				clonedEl.style.display = "";
+				clonedEls.push(clonedEl);
+			}
+
+			for (let i = 0; i < clonedEls.length; i++) {
+				let clonedEl = clonedEls[i];
+				dynamics.css(clonedEl, {
+					translateX: Math.random() * 10 - 5,
+				});
+
+				dynamics.setTimeout(function () {
+					dynamics.css(clonedEl, {
+						translateX: 0,
+					});
+				}, 50);
+
+				dynamics.setTimeout(function () {
+					dynamics.css(clonedEl, {
+						translateX: Math.random() * 5 - 2.5,
+					});
+				}, 100);
+
+				dynamics.setTimeout(function () {
+					el.removeChild(clonedEl);
+				}, 150);
+			}
+
+			dynamics.setTimeout(function () {
+				if (animating) {
+					animate();
+				}
+				for (let i = 0; i < masks.length; i++) {
+					let maskEl = document.querySelector(`#${masks[i]}`);
+					maskEl.parentNode.removeChild(maskEl);
+				}
+			}, Math.random() * 800);
+		};
+
+		animate();
+
+		return {
+			stop: function () {
+				animating = false;
+			},
+		};
+	}, []);
 
 	useEffect(
 		() => {
 			const node = ref.current;
+			let r = null;
 
 			const handleMouseOver = (e) => {
 				r = animateLink(ref);
@@ -226,7 +226,7 @@ function useHover() {
 				};
 			}
 		},
-		[r] // Recall only if ref changes
+		[animateLink] // Recall only if ref changes
 	);
 	return [ref];
 }
