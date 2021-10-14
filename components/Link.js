@@ -230,7 +230,7 @@ function useHover() {
 				};
 			}
 		},
-		[] // Recall only if ref changes
+		[r] // Recall only if ref changes
 	);
 	return [ref];
 }
