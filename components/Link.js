@@ -35,7 +35,7 @@ function createSvgChildEl(template) {
 	return el;
 }
 
-function createMasksWithStripes(count, box, averageHeight = 10) {
+function createMasksWithStripes(count, box, averageHeight = 10, id) {
 	let totalMaskIdx = 0;
 	let masks = [];
 	for (let i = 0; i < count; i++) {
@@ -43,7 +43,7 @@ function createMasksWithStripes(count, box, averageHeight = 10) {
 	}
 	let maskNames = [];
 	for (let i = totalMaskIdx; i < totalMaskIdx + masks.length; i++) {
-		maskNames.push(`clipPath${i}`);
+		maskNames.push(`clipPath-${id}-${i}`);
 	}
 	totalMaskIdx += masks.length;
 	let maskIdx = 0;
@@ -132,7 +132,7 @@ function animateLink(ref) {
 	let currentEl = document.querySelector(`#${currentElId}`);
 
 	let animate = function () {
-		let masks = createMasksWithStripes(3, box, 3);
+		let masks = createMasksWithStripes(3, box, 3, currentElId);
 		let clonedEls = [];
 
 		for (let i = 0; i < masks.length; i++) {
@@ -203,7 +203,6 @@ function animateLink(ref) {
 }
 
 function useHover() {
-	const [value, setValue] = useState(false);
 	const ref = useRef(null);
 	let r = null;
 
@@ -212,13 +211,10 @@ function useHover() {
 			const node = ref.current;
 
 			const handleMouseOver = (e) => {
-				console.log(r);
 				r = animateLink(ref);
-				console.log(r);
 			};
 
 			const handleMouseOut = (e) => {
-				console.log(r);
 				r.stop();
 			};
 			if (node) {
