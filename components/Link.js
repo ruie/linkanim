@@ -56,9 +56,9 @@ function createMasksWithStripes(count, box, averageHeight = 10, id) {
 			Math.round(Math.random() * box.width)
 		);
 		masks[maskIdx].push(
-			`M ${x},${y} L ${x + w},${y} L ${x + w},${y + stripeHeight} L ${x},${
+			`M ${x},${y} L ${x + w},${y} L ${x + w},${
 				y + stripeHeight
-			} Z`
+			} L ${x},${y + stripeHeight} Z`
 		);
 
 		maskIdx += 1;
@@ -118,8 +118,8 @@ function cloneAndStripeElement(element, clipPathName, parent) {
 		textDecoration: style.textDecoration,
 	});
 	parent.appendChild(el);
-	el.style["-webkit-clip-path"] = `url(/#${clipPathName})`;
-	el.style["clip-path"] = `url(/#${clipPathName})`;
+	el.style["-webkit-clip-path"] = `url(#${clipPathName})`;
+	el.style["clip-path"] = `url(#${clipPathName})`;
 
 	return el;
 }
