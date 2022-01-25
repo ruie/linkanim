@@ -25,7 +25,7 @@ export default function IndexPage() {
 						fill="#A6A8AB"
 					/>
 				</svg>
-				GAIA Skin Naturals
+				Test 1
 			</Link>
 			<Link className="relative flex" href="/about">
 				<svg
@@ -46,10 +46,10 @@ export default function IndexPage() {
 						fill="#A6A8AB"
 					/>
 				</svg>
-				babyU
+				Text 3
 			</Link>
 			<Link className="relative flex" href="/about">
-				Sudocrem
+				Text 2
 			</Link>
 			<Link className="relative flex" href="/about">
 				<svg

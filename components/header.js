@@ -12,7 +12,7 @@ export default function Header() {
 			<div className="flex flex-wrap items-center justify-between px-4 py-6 mx-auto lg:container md:flex-no-wrap md:px-6">
 				<div className="flex items-center">
 					<Link className="relative flex text-white" href="/about">
-						Nicepak Products
+						Index
 					</Link>
 					<Link className="relative flex" href="/about">
 						<svg
