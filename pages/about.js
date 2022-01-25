@@ -1,4 +1,3 @@
-import Image from "next/image";
 import dynamic from "next/dynamic";
 
 const Link = dynamic(() => import("@components/Link"), { ssr: false });
@@ -7,9 +6,6 @@ export default function AboutPage() {
 	return (
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 			<div className="text-white align-center">
-				<section className="mb-6">
-					<h2 className="mb-3 text-xl font-bold">What is Tailwind?</h2>
-				</section>
 				<Link className="relative flex text-white" href="/about">
 					<svg
 						fill="none"
