@@ -25,7 +25,7 @@ export default function IndexPage() {
 						fill="#A6A8AB"
 					/>
 				</svg>
-				Product design of Stripe Dashboard for iPhone
+				GAIA Skin Naturals
 			</Link>
 			<Link className="relative flex" href="/about">
 				<svg
@@ -46,10 +46,10 @@ export default function IndexPage() {
 						fill="#A6A8AB"
 					/>
 				</svg>
-				Product design of Stripe Dashboard for iPhone
+				babyU
 			</Link>
 			<Link className="relative flex" href="/about">
-				Product design of Stripe Dashboard for iPhone
+				Sudocrem
 			</Link>
 			<Link className="relative flex" href="/about">
 				<svg

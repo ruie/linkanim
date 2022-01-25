@@ -11,8 +11,8 @@ export default function Header() {
 		<header>
 			<div className="flex flex-wrap items-center justify-between px-4 py-6 mx-auto lg:container md:flex-no-wrap md:px-6">
 				<div className="flex items-center">
-					<Link className="relative flex" href="/about">
-						Product design of Stripe Dashboard for iPhone
+					<Link className="relative flex text-white" href="/about">
+						Nicepak Products
 					</Link>
 					<Link className="relative flex" href="/about">
 						<svg
@@ -61,10 +61,7 @@ export default function Header() {
 						{ title: "About", route: "/about" },
 					].map(({ route, title }) => (
 						<li className="mt-3 md:mt-0 md:ml-6" key={title}>
-							<Link
-								className="relative flex text-white"
-								href={route}
-							>
+							<Link className="relative flex text-white" href={route}>
 								{title}
 							</Link>
 						</li>
