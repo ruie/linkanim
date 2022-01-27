@@ -12,7 +12,6 @@ export default function GlitchLink(props) {
 		position: "absolute",
 		pointerEvents: "none",
 	});
-	console.log(props);
 
 	const cleanup = () => {
 		clearInterval(timerIdRef1.current);
@@ -36,8 +35,6 @@ export default function GlitchLink(props) {
 			fill: rgb,
 			background: "#000",
 		};
-
-		console.log({ mask });
 
 		timerIdRef1.current = setTimeout(() => {
 			updateHoverStyle((hoverStyle) => ({

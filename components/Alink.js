@@ -22,6 +22,7 @@ export default function ALink({ children, href, className }) {
 	const setVisibility = useCallback(
 		(flag, children) => {
 			setIsHover(flag);
+			console.log(flag);
 
 			const box = ref.current.getBoundingClientRect();
 			const masks = createMasksWithStripes(3, box, 3, id);
