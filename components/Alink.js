@@ -11,12 +11,6 @@ export default function ALink({ children, href, className }) {
 	const [isHover, setIsHover] = useState(true);
 	const [id] = useState(() => uniqueId("glitch-"));
 
-	const [hoverStyle, updateHoverStyle] = useState({
-		position: "absolute",
-		pointerEvents: "none",
-		zindex: 1,
-	});
-
 	const [glitches, setGlitches] = useState([]);
 
 	const setVisibility = useCallback(
