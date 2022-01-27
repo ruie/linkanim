@@ -25,7 +25,7 @@ export default function AboutPage() {
 						server-rendered React applications.
 					</p>
 				</section>
-				<Link className="relative flex" href="/about">
+				<Link className="relative flex text-white" href="/about">
 					<svg
 						fill="none"
 						width={21}
@@ -46,7 +46,7 @@ export default function AboutPage() {
 					</svg>
 					Product design of Stripe Dashboard for iPhone
 				</Link>
-				<Link className="relative flex" href="/about">
+				<Link className="relative flex text-white" href="/">
 					<svg
 						fill="none"
 						width={21}
@@ -65,7 +65,7 @@ export default function AboutPage() {
 							fill="#A6A8AB"
 						/>
 					</svg>
-					Product design of Stripe Dashboard for iPhone
+					Home
 				</Link>
 				<Link className="relative flex" href="/about">
 					Product design of Stripe Dashboard for iPhone

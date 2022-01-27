@@ -10,7 +10,7 @@ export default function GlitchLink({ children, href, className }) {
 	const [id] = useState(() => uniqueId("glitch-"));
 
 	return (
-		<Link href={href} passHref scroll>
+		<Link href={href} passHref>
 			<a ref={hoverRef} className={className}>
 				<span id={id}>{children}</span>
 			</a>
@@ -66,17 +66,17 @@ function useHover() {
 					dynamics.css(clonedEl, {
 						translateX: 0,
 					});
-				}, 50);
+				}, 50000);
 
 				dynamics.setTimeout(function () {
 					dynamics.css(clonedEl, {
 						translateX: Math.random() * 5 - 2.5,
 					});
-				}, 100);
+				}, 70000);
 
 				dynamics.setTimeout(function () {
 					el.removeChild(clonedEl);
-				}, 150);
+				}, 80000);
 			}
 
 			dynamics.setTimeout(function () {
@@ -84,10 +84,11 @@ function useHover() {
 					animate();
 				}
 				for (let i = 0; i < masks.length; i++) {
+					console.log("test");
 					let maskEl = document.querySelector(`#${masks[i]}`);
 					maskEl.parentNode.removeChild(maskEl);
 				}
-			}, Math.random() * 800);
+			}, Math.random() * 80000);
 		};
 
 		animate();
