@@ -1,4 +1,3 @@
-import Image from "next/image";
 import dynamic from "next/dynamic";
 
 const Link = dynamic(() => import("@components/Link"), { ssr: false });
@@ -6,25 +5,7 @@ const Link = dynamic(() => import("@components/Link"), { ssr: false });
 export default function AboutPage() {
 	return (
 		<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-			<div>
-				<section className="mb-6">
-					<h2 className="mb-3 text-xl font-bold">What is Tailwind?</h2>
-
-					<p>
-						Tailwind CSS is a highly customizable, low-level CSS framework
-						that gives you all of the building blocks you need to build
-						bespoke designs without any annoying opinionated styles you
-						have to fight to override.
-					</p>
-				</section>
-
-				<section>
-					<h2 className="mb-3 text-xl font-bold">What is Next.js?</h2>
-					<p>
-						Next.js is a minimalistic framework for creating
-						server-rendered React applications.
-					</p>
-				</section>
+			<div className="text-white align-center">
 				<Link className="relative flex text-white" href="/about">
 					<svg
 						fill="none"
@@ -44,7 +25,7 @@ export default function AboutPage() {
 							fill="#A6A8AB"
 						/>
 					</svg>
-					Product design of Stripe Dashboard for iPhone
+					Text 6
 				</Link>
 				<Link className="relative flex text-white" href="/">
 					<svg
@@ -67,10 +48,10 @@ export default function AboutPage() {
 					</svg>
 					Home
 				</Link>
-				<Link className="relative flex" href="/about">
-					Product design of Stripe Dashboard for iPhone
+				<Link className="relative flex text-white" href="/about">
+					Text 4
 				</Link>
-				<Link className="relative flex" href="/about">
+				<Link className="relative flex text-white" href="/about">
 					<svg
 						fill="none"
 						width={21}
