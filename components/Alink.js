@@ -19,13 +19,10 @@ export default function ALink({ children, href, className }) {
 
 	const [glitches, setGlitches] = useState([]);
 
-	const setVisibility = useCallback(
-		(flag, children) => {
-			setIsHover(flag);
-			console.log(flag);
-
-			const box = ref.current.getBoundingClientRect();
-			const masks = createMasksWithStripes(3, box, 3, id);
+	const hoverAnimation = (state) => {
+		const box = ref.current.getBoundingClientRect();
+		const masks = createMasksWithStripes(3, box, 3, id);
+		if(state) {
 			setGlitches(
 				[1].map((index, i) => {
 					return (
@@ -43,9 +40,18 @@ export default function ALink({ children, href, className }) {
 					);
 				})
 			);
+			hoverAnimation(state)
+		}
+	}
+
+	const setVisibility = useCallback(
+		(flag, children) => {
+			setIsHover(flag);
+			console.log(flag);
 
 			timerIdRef.current = setTimeout(() => {
 				setGlitches([]);
+				hoverAnimation(isHover);
 			}, 200);
 		},
 		[id]
