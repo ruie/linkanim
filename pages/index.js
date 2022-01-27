@@ -26,7 +26,7 @@ export default function IndexPage() {
 						fill="#A6A8AB"
 					/>
 				</svg>
-				Test 1
+				Gaia Skin Naturals
 			</Link>
 			<hr />
 			<ALink className="relative flex outline outline-white" href="/about">

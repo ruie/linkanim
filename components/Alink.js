@@ -1,6 +1,7 @@
-import { useState, cloneElement, useRef, useCallback, useEffect } from "react";
+import { Fragment, useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import uniqueId from "lodash.uniqueid";
+import { createMasksWithStripes } from "./Mask";
 
 import Glitch from "./Glitch";
 
@@ -13,29 +14,41 @@ export default function ALink({ children, href, className }) {
 	const [hoverStyle, updateHoverStyle] = useState({
 		position: "absolute",
 		pointerEvents: "none",
-		zIndex: 1,
+		zindex: 1,
 	});
 
 	const [glitches, setGlitches] = useState([]);
 
-	const setVisibility = useCallback((flag, children) => {
-		setIsHover(flag);
+	const setVisibility = useCallback(
+		(flag, children) => {
+			setIsHover(flag);
 
-		const box = ref.current.getBoundingClientRect();
-		setGlitches(
-			[1, 2, 3].map((index) => {
-				return (
-					<Glitch key={`g-${index}`} box={box}>
-						{children}
-					</Glitch>
-				);
-			})
-		);
+			const box = ref.current.getBoundingClientRect();
+			const masks = createMasksWithStripes(3, box, 3, id);
+			setGlitches(
+				[1].map((index, i) => {
+					return (
+						<Fragment key={`k-${i}`}>
+							<Glitch key={`g-${index}`} box={box} mask={masks[0]}>
+								{children}
+							</Glitch>
+							<Glitch key={`q-${index}`} box={box} mask={masks[1]}>
+								{children}
+							</Glitch>
+							<Glitch key={`t-${index}`} box={box} mask={masks[2]}>
+								{children}
+							</Glitch>
+						</Fragment>
+					);
+				})
+			);
 
-		timerIdRef.current = setTimeout(() => {
-			setGlitches([]);
-		}, 200);
-	}, []);
+			timerIdRef.current = setTimeout(() => {
+				setGlitches([]);
+			}, 200);
+		},
+		[id]
+	);
 
 	const linkCleanup = () => {
 		setGlitches([]);
