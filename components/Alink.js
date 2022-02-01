@@ -7,6 +7,7 @@ import Glitch from "./Glitch";
 
 export default function ALink({ children, href, className }) {
 	const ref = useRef(false);
+	const hoverIntervalRef = useRef(0);
 	const timerIdRef = useRef(0);
 	const [isHover, setIsHover] = useState(true);
 	const [id] = useState(() => uniqueId("glitch-"));
@@ -21,11 +22,16 @@ export default function ALink({ children, href, className }) {
 
 	const setVisibility = useCallback(
 		(flag, children) => {
-			setIsHover(flag);
-			console.log(flag);
-
 			const box = ref.current.getBoundingClientRect();
 			const masks = createMasksWithStripes(3, box, 3, id);
+			if (isHover) {
+				hoverIntervalRef.current = setInterval(() => {
+					console.log("test");
+				}, 250);
+			} else {
+				clearInterval(hoverIntervalRef.current);
+			}
+
 			setGlitches(
 				[1].map((index, i) => {
 					return (
@@ -48,26 +54,33 @@ export default function ALink({ children, href, className }) {
 				setGlitches([]);
 			}, 200);
 		},
-		[id]
+		[id, isHover]
 	);
 
 	const linkCleanup = () => {
 		setGlitches([]);
+		clearInterval(hoverIntervalRef.current);
 		clearInterval(timerIdRef.current);
 		timerIdRef.current = 0;
 	};
 
 	useEffect(() => {
 		return () => linkCleanup();
-	}, [setGlitches]);
+	}, []);
 
 	return (
 		<Link href={href} passHref>
 			<a
 				ref={ref}
 				className={className}
-				onMouseOver={() => setVisibility(true, children)}
-				onMouseOut={() => setVisibility(false, children)}
+				onMouseOver={() => {
+					setIsHover(true);
+					setVisibility(true, children);
+				}}
+				onMouseOut={() => {
+					setIsHover(false);
+					setVisibility(false, children);
+				}}
 			>
 				<div id={id}>{children}</div>
 				{glitches.length > 0 && glitches}

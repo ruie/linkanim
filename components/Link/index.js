@@ -66,17 +66,17 @@ function useHover() {
 					dynamics.css(clonedEl, {
 						translateX: 0,
 					});
-				}, 50000);
+				}, 50);
 
 				dynamics.setTimeout(function () {
 					dynamics.css(clonedEl, {
 						translateX: Math.random() * 5 - 2.5,
 					});
-				}, 50000);
+				}, 100);
 
 				dynamics.setTimeout(function () {
 					el.removeChild(clonedEl);
-				}, 50000);
+				}, 150);
 			}
 
 			dynamics.setTimeout(function () {
@@ -88,7 +88,7 @@ function useHover() {
 					let maskEl = document.querySelector(`#${masks[i]}`);
 					maskEl.parentNode.removeChild(maskEl);
 				}
-			}, Math.random() * 60000);
+			}, Math.random() * 200);
 		};
 
 		animate();
