@@ -22,6 +22,7 @@ const defaultGlitch = {
 
 export default function Test({ children }) {
 	const timeouts = React.useRef(new Map());
+	const masksEl = React.useRef(null);
 	const boxRef = React.useRef(null);
 	const [isHovered, setIsHovered] = React.useState(false);
 	const [glitch, setGlitch] = React.useState(defaultGlitch);
@@ -55,20 +56,11 @@ export default function Test({ children }) {
 	};
 
 	const handleMouseEnter = React.useCallback(() => {
-		const box = boxRef.current.getBoundingClientRect();
-		setMasks(
-			createMasksWithStripes(
-				3,
-				box,
-				3,
-				`${id}-${Math.floor(Math.random() * 1000)}`
-			)
-		);
 		randomGlitch("first");
 		randomGlitch("second");
 		randomGlitch("third");
 		setIsHovered(true);
-	}, [id]);
+	}, []);
 
 	const handleMouseOut = React.useCallback(() => {
 		setIsHovered(false);
@@ -103,6 +95,10 @@ export default function Test({ children }) {
 			});
 			return () => {
 				// console.log("effects clear", isHovered, glitch);
+				masksEl.current = document.querySelector(`#clip-paths > g`);
+				while (masksEl.current.firstChild) {
+					masksEl.current.removeChild(masksEl.current.firstChild);
+				}
 				Array.from(timeouts.current.values()).forEach(clearTimeout);
 			};
 		}
