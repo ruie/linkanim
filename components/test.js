@@ -1,27 +1,32 @@
 import React from "react";
 import Link from "next/link";
 import tinycolor from "tinycolor2";
-import { createMasksWithStripes, cloneAndStripeElement } from "./glitch";
+import uniqueId from "lodash.uniqueid";
+
+import { createMasksWithStripes } from "./Mask";
 
 const defaultGlitch = {
 	first: {
-		color: "#000",
+		color: "#fff",
 		posX: 0,
 	},
 	second: {
-		color: "#000",
+		color: "#fff",
 		posX: 0,
 	},
 	third: {
-		color: "#000",
+		color: "#fff",
 		posX: 0,
 	},
 };
 
-export default function Test() {
+export default function Test({ children }) {
 	const timeouts = React.useRef(new Map());
+	const boxRef = React.useRef(null);
 	const [isHovered, setIsHovered] = React.useState(false);
 	const [glitch, setGlitch] = React.useState(defaultGlitch);
+	const [masks, setMasks] = React.useState([]);
+	const [id] = React.useState(() => uniqueId("glitch-"));
 
 	const setNewTimeout = (name, delay, cb) => {
 		if (timeouts.current.has(name)) {
@@ -38,7 +43,7 @@ export default function Test() {
 			const color = tinycolor(
 				`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`
 			).toRgbString();
-			const posX = Math.random() * 5 - 2.5;
+			const posX = Math.random() * 10 - 5;
 			return {
 				...state,
 				[key]: {
@@ -50,45 +55,71 @@ export default function Test() {
 	};
 
 	const handleMouseEnter = React.useCallback(() => {
+		const box = boxRef.current.getBoundingClientRect();
+		setMasks(
+			createMasksWithStripes(
+				3,
+				box,
+				3,
+				`${id}-${Math.floor(Math.random() * 1000)}`
+			)
+		);
 		randomGlitch("first");
 		randomGlitch("second");
 		randomGlitch("third");
 		setIsHovered(true);
-	}, []);
+	}, [id]);
 
 	const handleMouseOut = React.useCallback(() => {
 		setIsHovered(false);
 	}, []);
 
 	React.useEffect(() => {
-		console.log("effects", isHovered, glitch, timeouts.current);
+		const box = boxRef.current.getBoundingClientRect();
 		if (isHovered) {
-			setNewTimeout("g-1", Math.random() * 1000, () => {
-				randomGlitch("first");
-				randomGlitch("second");
-				randomGlitch("third");
-			});
-			setNewTimeout("g-2", Math.random() * 1200, () => {
-				randomGlitch("second");
-			});
-			setNewTimeout("g-3", Math.random() * 1400, () => {
+			setMasks(
+				createMasksWithStripes(
+					3,
+					box,
+					3,
+					`${id}-${Math.floor(Math.random() * 1000)}`
+				)
+			);
+			setNewTimeout("g-batch", Math.random() * 500, () => {
+				setNewTimeout("g-1", 50, () => {
+					randomGlitch("first");
+					randomGlitch("second");
+					randomGlitch("third");
+				});
+				setNewTimeout("g-2", 150, () => {
+					randomGlitch("first");
+					randomGlitch("second");
+				});
+				setNewTimeout("g-3", 200, () => {
+					randomGlitch("second");
+					randomGlitch("third");
+				});
 				randomGlitch("default");
 			});
-			setNewTimeout("g-4", Math.random() * 1400, () => {
-				randomGlitch("third");
-			});
 			return () => {
-				console.log("effects clear", isHovered, glitch);
+				// console.log("effects clear", isHovered, glitch);
 				Array.from(timeouts.current.values()).forEach(clearTimeout);
 			};
 		}
 		randomGlitch("default");
-	}, [isHovered, glitch.first.color, glitch.second.color, glitch.third.color]);
+	}, [
+		isHovered,
+		glitch.first.color,
+		glitch.second.color,
+		glitch.third.color,
+		id,
+	]);
 
 	return (
-		<Link href="/test" passHref>
+		<Link href="/" passHref>
 			<a
-				className="flex justify-center cursor-pointer bg-[#fff]"
+				ref={boxRef}
+				className="flex justify-center cursor-pointer bg-[#fff] text-white"
 				onMouseEnter={() => handleMouseEnter()}
 				onMouseLeave={() => handleMouseOut()}
 			>
@@ -101,6 +132,11 @@ export default function Test() {
 								style={{
 									color: `${glitch.first.color}`,
 									transform: `translateX(${glitch.first.posX}%)`,
+									background: "#000",
+									fill: `${glitch.first.color}`,
+									width: boxRef.current.width,
+									height: boxRef.current.height,
+									clipPath: `url(#${masks[0]})`,
 								}}
 							>
 								GAIA Skin Naturals
@@ -110,6 +146,11 @@ export default function Test() {
 								style={{
 									color: `${glitch.second.color}`,
 									transform: `translateX(${glitch.second.posX}%)`,
+									background: "#000",
+									fill: `${glitch.second.color}`,
+									width: boxRef.current.width,
+									height: boxRef.current.height,
+									clipPath: `url(#${masks[1]})`,
 								}}
 							>
 								GAIA Skin Naturals
@@ -119,6 +160,11 @@ export default function Test() {
 								style={{
 									color: `${glitch.third.color}`,
 									transform: `translateX(${glitch.third.posX}%)`,
+									background: "#000",
+									fill: `${glitch.third.color}`,
+									width: boxRef.current.width,
+									height: boxRef.current.height,
+									clipPath: `url(#${masks[2]})`,
 								}}
 							>
 								GAIA Skin Naturals

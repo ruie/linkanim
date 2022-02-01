@@ -58,7 +58,7 @@ export default function Header() {
 				>
 					{[
 						{ title: "Home", route: "/" },
-						{ title: "About", route: "/about" },
+						{ title: "About", route: "/gaia" },
 					].map(({ route, title }) => (
 						<li className="mt-3 md:mt-0 md:ml-6" key={title}>
 							<Link className="relative flex text-white" href={route}>
