@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import tinycolor from "tinycolor2";
-import uniqueId from "lodash.uniqueid";
 
 import { createMasksWithStripes } from "./Mask";
 
@@ -27,7 +26,6 @@ export default function Test({ children }) {
 	const [isHovered, setIsHovered] = React.useState(false);
 	const [glitch, setGlitch] = React.useState(defaultGlitch);
 	const [masks, setMasks] = React.useState([]);
-	const [id] = React.useState(() => uniqueId("glitch-"));
 
 	const setNewTimeout = (name, delay, cb) => {
 		if (timeouts.current.has(name)) {
@@ -36,7 +34,7 @@ export default function Test({ children }) {
 		timeouts.current.set(name, setTimeout(cb, delay));
 	};
 
-	const randomGlitch = (key) => {
+	const randomGlitch = (key, max) => {
 		if (key === "default") {
 			setGlitch(defaultGlitch);
 		}
@@ -44,7 +42,9 @@ export default function Test({ children }) {
 			const color = tinycolor(
 				`hsl(${Math.round(Math.random() * 360)}, 80%, 65%)`
 			).toRgbString();
-			const posX = Math.random() * 10 - 5;
+			const num1 = max  === 'max' ? 10 : 5;
+			const num2 = max  === 'max' ? 5 : 3.5;
+			const posX = Math.random() * num1 - num2;
 			return {
 				...state,
 				[key]: {
@@ -56,9 +56,9 @@ export default function Test({ children }) {
 	};
 
 	const handleMouseEnter = React.useCallback(() => {
-		randomGlitch("first");
-		randomGlitch("second");
-		randomGlitch("third");
+		randomGlitch("first", 'max');
+		randomGlitch("second", 'max');
+		randomGlitch("third", 'max');
 		setIsHovered(true);
 	}, []);
 
@@ -74,31 +74,33 @@ export default function Test({ children }) {
 					3,
 					box,
 					3,
-					`${id}-${Math.floor(Math.random() * 1000)}`
+					`${Math.floor(Math.random() * 100)}`
 				)
 			);
-			setNewTimeout("g-batch", Math.random() * 500, () => {
-				setNewTimeout("g-1", 50, () => {
-					randomGlitch("first");
-					randomGlitch("second");
-					randomGlitch("third");
-				});
-				setNewTimeout("g-2", 150, () => {
-					randomGlitch("first");
-					randomGlitch("second");
-				});
-				setNewTimeout("g-3", 200, () => {
-					randomGlitch("second");
-					randomGlitch("third");
+			setNewTimeout("g-batch", Math.random() * 350, () => {
+				console.log('ba')
+				setNewTimeout("g-1", Math.random() * 250, () => {
+					console.log('50')
+					randomGlitch("first", 'min');
+					randomGlitch("second", 'min');
+					randomGlitch("third", 'min');
 				});
 				randomGlitch("default");
 			});
 			return () => {
-				// console.log("effects clear", isHovered, glitch);
+				console.log('cler')
 				masksEl.current = document.querySelector(`#clip-paths > g`);
 				while (masksEl.current.firstChild) {
 					masksEl.current.removeChild(masksEl.current.firstChild);
 				}
+				setMasks(
+					createMasksWithStripes(
+						3,
+						box,
+						3,
+						`${Math.floor(Math.random() * 100)}`
+					)
+				);
 				Array.from(timeouts.current.values()).forEach(clearTimeout);
 			};
 		}
@@ -108,7 +110,6 @@ export default function Test({ children }) {
 		glitch.first.color,
 		glitch.second.color,
 		glitch.third.color,
-		id,
 	]);
 
 	return (
