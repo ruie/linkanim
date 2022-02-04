@@ -112,7 +112,7 @@ export default function Test({ children }) {
 	]);
 
 	return (
-		<Link href="/" passHref>
+		<Link href="/z" passHref>
 			<a
 				ref={boxRef}
 				className="flex justify-center cursor-pointer bg-[#fff] text-white"
