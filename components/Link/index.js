@@ -2,12 +2,11 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import dynamics from "dynamics.js";
 import tinycolor from "tinycolor2";
-import uniqueId from "lodash.uniqueid";
 import { createMasksWithStripes, cloneAndStripeElement } from "./glitch";
 
 export default function GlitchLink({ children, href, className }) {
 	const [hoverRef] = useHover();
-	const [id] = useState(() => uniqueId("glitch-"));
+	const [id] = useState("glitch-");
 
 	return (
 		<Link href={href} passHref>
