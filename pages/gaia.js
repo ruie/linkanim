@@ -1,7 +1,7 @@
 import Test from "../components/test";
 export default function Gaia() {
 	return (
-		<div>
+		<div className="text-2xl">
 			<Test />
 			<Test />
 			<Test />

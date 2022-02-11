@@ -26,7 +26,7 @@ export const createMasksWithStripes = (count, box, averageHeight = 10, id) => {
 	}
 	let maskNames = [];
 	for (let i = totalMaskIdx; i < totalMaskIdx + masks.length; i++) {
-		maskNames.push(`glitch-${id}${i}`);
+		maskNames.push(`glitch-${Math.floor(Math.random() * 100)}${i}`);
 	}
 	totalMaskIdx += masks.length;
 	let maskIdx = 0;
