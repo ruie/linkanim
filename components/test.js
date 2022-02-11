@@ -41,6 +41,10 @@ export default function Test({ children }) {
 
 	const randomGlitch = (key, max) => {
 		if (key === "default") {
+			masksEl.current = document.querySelector(`#clip-paths > g`);
+			while (masksEl.current.firstChild) {
+				masksEl.current.removeChild(masksEl.current.firstChild);
+			}
 			setGlitch(defaultGlitch);
 		}
 		setGlitch((state) => {
@@ -61,59 +65,46 @@ export default function Test({ children }) {
 	};
 
 	const handleMouseEnter = React.useCallback(() => {
-		const box = boxRef.current.getBoundingClientRect();
 		setIsHovered(true);
-		console.log("1");
-		randomGlitch("first", "max");
-		randomGlitch("second", "max");
-		randomGlitch("third", "max");
-		setMasks(createMasksWithStripes(3, box, 4));
 	}, []);
 
 	const handleMouseOut = React.useCallback(() => {
-		masksEl.current = document.querySelector(`#clip-paths > g`);
-		while (masksEl.current.firstChild) {
-			masksEl.current.removeChild(masksEl.current.firstChild);
-		}
 		setIsHovered(false);
 	}, []);
 
 	React.useEffect(() => {
-		const box = boxRef.current.getBoundingClientRect();
+		console.log("ee");
 		if (isHovered) {
+			const box = boxRef.current.getBoundingClientRect();
 			console.log("5");
+			setMasks(createMasksWithStripes(3, box, 4));
 			randomGlitch("first", "max");
 			randomGlitch("second", "max");
 			randomGlitch("third", "max");
 
-			setNewTimeout("g-4", 50, () => {
+			setNewTimeout("g-4", 80, () => {
 				console.log("10");
+				setMasks(createMasksWithStripes(3, box, 4));
 				randomGlitch("first", "min");
 				randomGlitch("second", "min");
 				randomGlitch("third", "min");
 			});
 
-			setNewTimeout("g-3", 100, () => {
-				console.log("20");
-				randomGlitch("default");
-				// randomGlitch("first", "min");
-				// randomGlitch("second", "max");
-				// randomGlitch("third", "min");
-			});
-			setNewTimeout("g-2", 150, () => {
-				console.log("30");
+			setNewTimeout("g-3", 150, () => {
 				randomGlitch("default");
 			});
 
 			setNewTimeout("g-1", Math.random() * 1000, () => {
 				console.log("40");
-				randomGlitch("default");
-				// setMasks(createMasksWithStripes(3, box, 4));
 				setTick((old) => (old === 0 ? 1 : 0));
 			});
 
 			return () => {
-				console.log("clear");
+				console.log("cleanup");
+				masksEl.current = document.querySelector(`#clip-paths > g`);
+				while (masksEl.current.firstChild) {
+					masksEl.current.removeChild(masksEl.current.firstChild);
+				}
 				Array.from(timeouts.current.values()).forEach(clearTimeout);
 			};
 		}
